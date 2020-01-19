@@ -1,11 +1,11 @@
 var svgWidth = 800;
-var svgHeight = 600;
+var svgHeight = 700;
 
 var margin = {
     top : 100,
-    right :20,
+    right :10,
     bottom: 100,
-    left:60
+    left: 60
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -23,7 +23,7 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
   //Import Data
-d3.csv("assets/data/data.csv").then(function(liveData){
+d3.csv("assets/data/data.csv").then(function(liveData) {
     // Step 1: Parse Data/Cast as numbers
     // ==============================
     liveData.forEach(function(data){
@@ -36,7 +36,7 @@ d3.csv("assets/data/data.csv").then(function(liveData){
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-      .domain([d3.min(liveData, d =>d.poverty)*0.8, d3.max(liveData, d =>d.poverty)*1.2])
+      .domain([d3.min(liveData, d =>d.poverty)*0.9, d3.max(liveData, d =>d.poverty)*1.2])
       .range([0, width]);
     
     var yLinearScale = d3.scaleLinear()
@@ -59,7 +59,7 @@ d3.csv("assets/data/data.csv").then(function(liveData){
 
     // Step 5: Create Circles
     // ==============================
-    var circlesGroup = chartGroup.selectAll(".stateCircle")
+    circlesGroup = chartGroup.selectAll(".stateCircle")
       .data(liveData)
       .enter()
       .append("circle")
@@ -71,7 +71,7 @@ d3.csv("assets/data/data.csv").then(function(liveData){
 
 
     // Add Circle Text Labels
-    var cirlesText = chartGroup.selectAll(".stateText")
+    cirlesText = chartGroup.selectAll(".stateText")
       .data(liveData)
       .enter()
       .append("text")
@@ -93,16 +93,18 @@ d3.csv("assets/data/data.csv").then(function(liveData){
       .classed("active", true)
       .text("Lacks Healthcare (%)")
       // .style('stroke','#000')
-
+    // console.log(width);
     //append x axis
     chartGroup.append("text")
-      .attr("transfrom", `translate(${width / 2}, ${height + margin.top+100})`)
+      .attr("transform", `translate(${width / 2}, ${height+margin.bottom-50})`)
+      // .attr("x", width / 2 )
+      // .attr("y",  height + 40)
       .attr("class", "aText")
       .classed("aText", true)
       .classed("active", true)
       .text("In Poverty (%)")
       // .style('stroke', '#000');
-}).catch(function(error){
+}).catch(function(error) {
   console.log(error);
 })
     
