@@ -118,25 +118,43 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, circlesText) {
     .html(function(d) {
       return (`${d.state}<br>${xlabel}: ${d[chosenXAxis]}<br>${ylabel}: ${d[chosenYAxis]}`);
     });
-
+  
+    
   circlesGroup.call(toolTip);
 
-  circlesGroup.on("mouseover", function(data) {
+  circlesGroup.on("mouseover", function(data,index) {
     toolTip.show(data);
+    d3.select(this).transition()
+          .duration('100')
+          .attr("r", 12)
+          .style("stroke","black");
+          // console.log(this);
+
   })
     //on mouse out event
     .on("mouseout", function(data,index) {
     toolTip.hide(data);
-  });
+    d3.select(this).transition()
+      .attr("r", 10)
+      .style("stroke", "none");
+      
+    // toolTip.style("display","none")
+  })
 
   circlesText.call(toolTip);
 
   circlesText.on("mouseover", function(data) {
     toolTip.show(data);
+    // d3.select(this).transition()
+    // .attr("r", 12)
+    // .style("stroke", "black");
+    console.log(this);
+   
   })
     //on mouse out event
     .on("mouseout", function(data,index) {
     toolTip.hide(data);
+    
   });
   return circlesGroup;
   
