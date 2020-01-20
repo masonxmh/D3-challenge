@@ -89,7 +89,7 @@ function renderCirclesText(circlesText, newXScale, newYScale, chosenXAxis, chose
 
 
 // function used for updating circles group with new tooltip
-function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, circlesText) {
+function updateToolTip(chosenXAxis, chosenYAxis, scatterGroup) {
   //xaxis selection
   if (chosenXAxis === "poverty") {
     var xlabel = "In Poverty (%)"
@@ -120,15 +120,17 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, circlesText) {
     });
   
     
-  circlesGroup.call(toolTip);
+  scatterGroup.call(toolTip);
 
-  circlesGroup.on("mouseover", function(data,index) {
+  scatterGroup.on("mouseover", function(data,index) {
     toolTip.show(data);
     d3.select(this).transition()
           .duration('100')
-          .attr("r", 12)
-          .style("stroke","black");
-          // console.log(this);
+          .attr("r", 10)
+          .style("stroke","black")
+          .attr("stroke-width", 1.5)
+          .attr("fill", "#FFFFFF");
+          console.log(this.firstChild);
 
   })
     //on mouse out event
@@ -141,22 +143,19 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, circlesText) {
     // toolTip.style("display","none")
   })
 
-  circlesText.call(toolTip);
+  // circlesText.call(toolTip);
 
-  circlesText.on("mouseover", function(data) {
-    toolTip.show(data);
-    // d3.select(this).transition()
-    // .attr("r", 12)
-    // .style("stroke", "black");
-    console.log(this);
+  // circlesText.on("mouseover", function(data, index) {
+  //   toolTip.show(data);
    
-  })
-    //on mouse out event
-    .on("mouseout", function(data,index) {
-    toolTip.hide(data);
+  // })
+  //   //on mouse out event
+  //   .on("mouseout", function(data,index) {
+  //   toolTip.hide(data);
+  
     
-  });
-  return circlesGroup;
+  // });
+  return scatterGroup;
   
 } // updateToolTip
 
@@ -202,19 +201,25 @@ d3.csv("assets/data/data.csv").then(function(liveData, err) {
 
     // Create Initial Circles
     // ==============================
-    var circlesGroup = chartGroup.selectAll(".stateCircle")
+    var scatterGroup=chartGroup.append("g").classed("scatterSpec",true)
+    // for (i = 0; i<data.length; i++){
+    //   console.log(i);
+    // }
+    var circlesGroup = scatterGroup.selectAll(".stateCircle")
       .data(liveData)
       .enter()
       .append("circle")
+      .attr("id", function(d,i){return "clipCirle"+i;})
       .attr("cx", d => xLinearScale(d[chosenXAxis]))
       .attr("cy", d => yLinearScale(d[chosenYAxis]))
       .attr("class", "stateCircle")
       .attr("r", "10")
-      .attr("opacity", ".9");
+      .attr("opacity", ".9")
+      .attr("cursor", "pointer");
 
 
     // Add Circle Text Labels
-    var circlesText = chartGroup.selectAll(".stateText")
+    var circlesText = scatterGroup.selectAll(".stateText")
       .data(liveData)
       .enter()
       .append("text")
@@ -222,7 +227,8 @@ d3.csv("assets/data/data.csv").then(function(liveData, err) {
       .attr("y", d => yLinearScale(d[chosenYAxis]-0.2))
       .attr("class", "stateText")
       .text(d => d.abbr)
-      .attr("font-size", "10px")  // Font size
+      .attr("font-size", "10px")
+      .attr("cursor", "pointer"); 
       
     // Create group for 3 x - axis labels
     //===================================
@@ -313,7 +319,7 @@ d3.csv("assets/data/data.csv").then(function(liveData, err) {
           circlesText = renderCirclesText(circlesText, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
           // updates tooltips with new info
-          circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, circlesText);
+          scatterGroup = updateToolTip(chosenXAxis, chosenYAxis, scatterGroup);
           
           //changes classes to change bold text
           if (chosenXAxis === "poverty") {
