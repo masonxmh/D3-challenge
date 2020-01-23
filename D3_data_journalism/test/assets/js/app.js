@@ -1,5 +1,15 @@
-var svgWidth = 800;
-var svgHeight = 700;
+function makeResponsive() {
+  var svgArea = d3.select("body").select("svg");
+
+  if (!svgArea.empty()) {
+      svgArea.remove();
+  }
+  // var svgWidth = window.innerWidth;
+  // var svgHeight = window.innerHeight;
+  var svgWidth = document.getElementsByClassName("article")[0].offsetWidth;
+  var svgHeight = svgWidth;
+// var svgWidth = 800;
+// var svgHeight = 700;
 
 var margin = {
     top : 100,
@@ -430,4 +440,8 @@ d3.csv("assets/data/data.csv").then(function(liveData, err) {
 }).catch(function(error) {
   console.log(error);
 })
-    
+
+} //Responsive() function
+makeResponsive();
+
+d3.select(window).on("resize", makeResponsive);
