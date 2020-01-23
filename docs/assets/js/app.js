@@ -124,19 +124,22 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, circlesText) {
 
   circlesGroup.on("mouseover", function(data,index) {
     toolTip.show(data);
-    d3.select(this).transition()
-          .duration('100')
-          .attr("r", 12)
-          .style("stroke","black");
+    d3.select(this).style("stroke", "black");
+    // d3.select(this).transition()
+    //       .duration('100')
+    //       .attr("r", 12)
+    //       .style("stroke","black");
           // console.log(this);
 
   })
     //on mouse out event
     .on("mouseout", function(data,index) {
     toolTip.hide(data);
-    d3.select(this).transition()
-      .attr("r", 10)
-      .style("stroke", "none");
+    d3.select(this).style("stroke", "none");
+    // d3.select(this).transition()
+    //   .attr("r", 10)
+    //   .style("stroke", "none");
+    
       
     // toolTip.style("display","none")
   })
@@ -148,12 +151,15 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, circlesText) {
     // d3.select(this).transition()
     // .attr("r", 12)
     // .style("stroke", "black");
+    console.log("."+data.abbr);
+    d3.select("." + data.abbr).style("stroke", "black");
     console.log(this);
    
   })
     //on mouse out event
     .on("mouseout", function(data,index) {
     toolTip.hide(data);
+    d3.select("." + data.abbr).style("stroke", "none");
     
   });
   return circlesGroup;
@@ -208,7 +214,7 @@ d3.csv("assets/data/data.csv").then(function(liveData, err) {
       .append("circle")
       .attr("cx", d => xLinearScale(d[chosenXAxis]))
       .attr("cy", d => yLinearScale(d[chosenYAxis]))
-      .attr("class", "stateCircle")
+      .attr("class", d => "stateCircle " + d.abbr)
       .attr("r", "10")
       .attr("opacity", ".9");
 
